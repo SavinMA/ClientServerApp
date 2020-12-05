@@ -1,0 +1,152 @@
+﻿<mah:MetroWindow
+        x:Class="Client.MainWindow"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Client"
+        mc:Ignorable="d"
+        GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
+        ResizeMode="CanResizeWithGrip"
+        WindowStartupLocation="CenterScreen"
+        Title="Здесь должно быть название программы" Height="450" Width="800"
+        d:DataContext="{d:DesignInstance Type=local:BaseViewModel}">
+
+
+    <mah:MetroWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Client;component/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <local:BoolToVisiblityConverter x:Key="BoolToVisiblityConverter"/>
+            <local:FlipBoolConverter x:Key="FlipBoolConverter"/>
+        </ResourceDictionary>
+    </mah:MetroWindow.Resources>
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid MinWidth="250">
+            <StackPanel Margin="16">
+
+                <!--Генерация файлов-->
+                <StackPanel IsEnabled="{Binding AccessToFiles}">
+                    <TextBox Text="{Binding FilesCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button Content="Генерация файлов" Command="{Binding GenerateFilesCommand}"/>
+                </StackPanel>
+
+                <Separator Margin="10"/>
+
+                <!--Панель упр. клиентом-->
+                <StackPanel IsEnabled="{Binding IsConnected, Converter={StaticResource FlipBoolConverter}}">
+                    <TextBox Text="{Binding IP, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Text="{Binding Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button Content="Подключиться" Command="{Binding ConnectCommand}"/>
+                </StackPanel>
+
+                <StackPanel Visibility="{Binding IsConnected, Converter={StaticResource BoolToVisiblityConverter}}">
+                    <Button Content="Отключиться" Command="{Binding DisconnectCommand}"/>
+                    <Rectangle 
+                        Height="10"
+                        Margin="10"
+                        Fill="Green"/>
+
+                    <Separator Margin="10"/>
+                    
+                    <Button Content="Отправить"
+                            Command="{Binding SendCommand}"/>
+
+                    <TextBox Margin="12" Text="{Binding DelayFromSends, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+
+
+
+                <TextBlock Text="Справочник" FontSize="16" FontWeight="Normal" HorizontalAlignment="Center"/>
+                <Grid>
+                    <Grid.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="Margin" Value="2"/>
+                            <Setter Property="BorderBrush" Value="LightGray"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                        </Style>
+                    </Grid.Resources>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Не отправлено"/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Отправлено"/>
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Не обработано"/>
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Это полином"/>
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Это не полином"/>
+
+                    <Border Grid.Row="0" Grid.Column="1" Background="White"/>
+                    <Border Grid.Row="1" Grid.Column="1" Background="LightBlue"/>
+                    <Border Grid.Row="2" Grid.Column="1" Background="Red"/>
+                    <Border Grid.Row="3" Grid.Column="1" Background="Green"/>
+                    <Border Grid.Row="4" Grid.Column="1" Background="Yellow"/>
+                </Grid>
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Column="1">
+            <ScrollViewer>
+                <ItemsControl ItemsSource="{Binding Files}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel Orientation="Vertical" Margin="12 8"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type local:FileModel}">
+                            <Border x:Name="border" BorderBrush="LightGray" BorderThickness="1" Margin="1">
+                                <StackPanel Margin="8">
+                                    <TextBlock Text="{Binding FileName}" FontSize="12" FontWeight="Normal"/>
+                                    <TextBlock Text="{Binding Text}" FontSize="10" ToolTip="{Binding Text}"/>
+                                </StackPanel>
+                            </Border>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding State}" Value="{x:Static local:EFileState.None}">
+                                    <Setter TargetName="border" Property="Background" Value="White"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding State}" Value="{x:Static local:EFileState.Sended}">
+                                    <Setter TargetName="border" Property="Background" Value="LightBlue"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding State}" Value="{x:Static local:EFileState.RecievedBad}">
+                                    <Setter TargetName="border" Property="Background" Value="Red"/>
+                                </DataTrigger>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding State}" Value="{x:Static local:EFileState.RecievedGood}"/>
+                                        <Condition Binding="{Binding IsPolinom}" Value="True"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="border" Property="Background" Value="Green"/>
+                                </MultiDataTrigger>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding State}" Value="{x:Static local:EFileState.RecievedGood}"/>
+                                        <Condition Binding="{Binding IsPolinom}" Value="False"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="border" Property="Background" Value="Yellow"/>
+                                </MultiDataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</mah:MetroWindow>
