@@ -25,6 +25,7 @@ namespace Common
 
         public ClientTcp()
         {
+            Guid = Guid.NewGuid();
         }
 
         #region Properties
@@ -54,7 +55,6 @@ namespace Common
         /// <param name="tcpClient"></param>
         public void Initialize(TcpClient tcpClient)
         {
-            Guid = Guid.NewGuid();
             cancellationToken = new CancellationTokenSource();
             client = tcpClient;
             if (client.Connected)

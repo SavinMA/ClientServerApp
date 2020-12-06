@@ -14,16 +14,20 @@ namespace Server
 {
     public class ClientServer : IDisposable
     {
+        #region Fields
         private const int port = 50001;
+        private const int delayTime = 2048;
 
         private readonly TcpListener listener;
         private readonly CancellationTokenSource cancellationTokenSource;
         private readonly ConcurrentDictionary<Guid, ClientTcp> Clients = new ConcurrentDictionary<Guid, ClientTcp>();
+        
+        private readonly int maxProcessCount = 5;
 
         private bool disposedValue;
-        private int delayTime = 2048;
-        private int maxProcessCount = 5;
         private long currentProcessCount = 0;
+
+        #endregion
 
         public ClientServer(int maxProcess)
         {
@@ -139,14 +143,17 @@ namespace Server
         /// </summary>
         public void Stop()
         {
+            cancellationTokenSource?.Cancel();
             listener?.Stop();
         }
 
+        #region IDisposable
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
             {
-                listener?.Stop();
+                Stop();
+                Clients.Clear();
                 if (disposing)
                 {
                     cancellationTokenSource?.Dispose();
@@ -161,5 +168,6 @@ namespace Server
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
+        #endregion
     }
 }

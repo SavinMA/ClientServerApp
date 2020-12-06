@@ -1,8 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using CreateTextFiles;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Linq;
 
-namespace CreateTextFiles
+namespace unit.test
 {
     [TestClass]
     public class TextGeneratorTests
