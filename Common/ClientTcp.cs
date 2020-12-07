@@ -21,6 +21,7 @@ namespace Common
         private TcpClient client;
         private NetworkStream stream;
         private bool disposedValue;
+        private char[] separator = new char[] { '|' };
         #endregion
 
         public ClientTcp()
@@ -130,7 +131,9 @@ namespace Common
                 }
                 else
                 {
-                    MessageRecieved?.Invoke(Guid, message);
+                    message.Split(separator, StringSplitOptions.RemoveEmptyEntries)
+                        .AsParallel()
+                        .ForAll(mes => MessageRecieved?.Invoke(Guid, mes));
                 }
             }
         }
@@ -142,7 +145,7 @@ namespace Common
         /// <returns></returns>
         public async Task Send(string message)
         {
-            var data = Encoding.UTF8.GetBytes(message);
+            var data = Encoding.UTF8.GetBytes($"{message}|");
             await stream.WriteAsync(data, 0, data.Length);
         }
 
