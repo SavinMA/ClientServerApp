@@ -73,46 +73,11 @@
                     <TextBox Text="{Binding DelayFromSends, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
 
-
-
                 <TextBlock Text="Справочник" FontSize="16" FontWeight="Normal" HorizontalAlignment="Center" Margin="0 5"/>
-                <Grid>
-                    <Grid.Resources>
-                        <Style TargetType="Border">
-                            <Setter Property="Margin" Value="2"/>
-                            <Setter Property="BorderBrush" Value="LightGray"/>
-                            <Setter Property="BorderThickness" Value="1"/>
-                        </Style>
-                        <Style TargetType="TextBlock" BasedOn="{StaticResource MahApps.Styles.TextBlock}">
-                            <Setter Property="VerticalAlignment" Value="Center"/>
-                            <Setter Property="HorizontalAlignment" Value="Left"/>
-                            <Setter Property="FontSize" Value="12"/>
-                        </Style>
-                    </Grid.Resources>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
+                <local:Manual/>
 
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Не отправлено"/>
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Отправлено"/>
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Не обработано"/>
-                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Это полином"/>
-                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Это не полином"/>
-
-                    <Border Grid.Row="0" Grid.Column="1" Background="White"/>
-                    <Border Grid.Row="1" Grid.Column="1" Background="LightBlue"/>
-                    <Border Grid.Row="2" Grid.Column="1" Background="Red"/>
-                    <Border Grid.Row="3" Grid.Column="1" Background="Green"/>
-                    <Border Grid.Row="4" Grid.Column="1" Background="Yellow"/>
-                </Grid>
+                <TextBlock Text="Статистика" FontSize="16" FontWeight="Normal" HorizontalAlignment="Center" Margin="0 5"/>
+                <local:StatisticView Margin="0 5"/>
             </StackPanel>
         </Border>
 

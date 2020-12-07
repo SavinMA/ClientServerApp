@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="Client.StatisticView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Client"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="400"
+             d:DataContext="{d:DesignInstance Type=local:BaseViewModel}">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Client;component/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style TargetType="TextBlock" BasedOn="{StaticResource MahApps.Styles.TextBlock}">
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="FontSize" Value="14"/>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
+    <StackPanel HorizontalAlignment="Left">
+        <TextBlock>
+            <Run Text="Всего файлов:"/>
+            <Run Text="{Binding Files.Count, Mode=OneWay}" FontWeight="Medium"/>
+        </TextBlock>
+        <TextBlock>
+            <Run Text="Отправлено:"/>
+            <Run Text="{Binding SendedFilesCount, Mode=OneWay}" FontWeight="Medium"/>
+        </TextBlock>
+        <TextBlock>
+            <Run Text="Не обработано:"/>
+            <Run Text="{Binding BadFilesCount, Mode=OneWay}" FontWeight="Medium"/>
+        </TextBlock>
+        <TextBlock>
+            <Run Text="Полиномы:"/>
+            <Run Text="{Binding IsPolinomFilesCount, Mode=OneWay}" FontWeight="Medium"/>
+        </TextBlock>
+        <TextBlock>
+            <Run Text="Не полиномы:"/>
+            <Run Text="{Binding IsNotPolinomFilesCount, Mode=OneWay}" FontWeight="Medium"/>
+        </TextBlock>
+    </StackPanel>
+</UserControl>

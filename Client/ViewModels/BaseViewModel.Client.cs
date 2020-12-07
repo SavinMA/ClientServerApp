@@ -162,6 +162,7 @@ namespace Client
             isWait = true;
 
             Files.AsParallel().ForAll(file => file.State = EFileState.None);
+            ResetStatistic();
 
             foreach (var file in Files)
             {
@@ -172,18 +173,6 @@ namespace Client
 
                 await Task.Delay(DelayFromSends);
             }
-
-            /*
-            StringBuilder builder = new StringBuilder();
-
-            builder.AppendLine($"Всего файлов: {Files.Count}");
-            builder.AppendLine($"Потеряно: {Files.Count(f => f.State == EFileState.Sended)}");
-            builder.AppendLine($"Не обработаны: {Files.Count(f => f.State == EFileState.RecievedBad)}");
-            builder.AppendLine($"Полиномы: {Files.Count(f => f.State == EFileState.RecievedGood && f.IsPolinom)}");
-            builder.AppendLine($"Не полиномы: {Files.Count(f => f.State == EFileState.RecievedGood && !f.IsPolinom)}");
-
-            MessageBox.Show(builder.ToString());
-            */
 
             AccessToFiles = true;
             isWait = false;
@@ -218,6 +207,8 @@ namespace Client
                 file.State = responce.State == EResponceState.Bad ? EFileState.RecievedBad : EFileState.RecievedGood;
                 file.IsPolinom = responce.IsPolinom;
             }
+
+            ChangeStatistic();
         }
 
         private void ClientOnDisconnected(Guid guid)
