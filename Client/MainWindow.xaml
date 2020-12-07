@@ -10,7 +10,8 @@
         GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
         ResizeMode="CanResizeWithGrip"
         WindowStartupLocation="CenterScreen"
-        Title="Здесь должно быть название программы" Height="450" Width="800"
+        Title="Здесь должно быть название программы" 
+        WindowState="Maximized"
         d:DataContext="{d:DesignInstance Type=local:BaseViewModel}">
 
 
@@ -31,11 +32,15 @@
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
-        <Grid MinWidth="250">
+        <Border MinWidth="250"
+                Grid.Column="0" 
+                BorderBrush="LightGray"
+                BorderThickness="0 0 1 0">
             <StackPanel Margin="16">
 
                 <!--Генерация файлов-->
                 <StackPanel IsEnabled="{Binding AccessToFiles}">
+                    <TextBlock Text="Количество файлов для генерации"/>
                     <TextBox Text="{Binding FilesCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <Button Content="Генерация файлов" Command="{Binding GenerateFilesCommand}"/>
                 </StackPanel>
@@ -44,7 +49,9 @@
 
                 <!--Панель упр. клиентом-->
                 <StackPanel IsEnabled="{Binding IsConnected, Converter={StaticResource FlipBoolConverter}}">
+                    <TextBlock Text="IP адрес"/>
                     <TextBox Text="{Binding IP, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="Порт"/>
                     <TextBox Text="{Binding Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <Button Content="Подключиться" Command="{Binding ConnectCommand}"/>
                 </StackPanel>
@@ -59,20 +66,27 @@
                     <Separator Margin="10"/>
                     
                     <Button Content="Отправить"
+                            Margin="0 5"
                             Command="{Binding SendCommand}"/>
 
-                    <TextBox Margin="12" Text="{Binding DelayFromSends, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="Время отправки между файлами (мс)"/>
+                    <TextBox Text="{Binding DelayFromSends, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
 
 
 
-                <TextBlock Text="Справочник" FontSize="16" FontWeight="Normal" HorizontalAlignment="Center"/>
+                <TextBlock Text="Справочник" FontSize="16" FontWeight="Normal" HorizontalAlignment="Center" Margin="0 5"/>
                 <Grid>
                     <Grid.Resources>
                         <Style TargetType="Border">
                             <Setter Property="Margin" Value="2"/>
                             <Setter Property="BorderBrush" Value="LightGray"/>
                             <Setter Property="BorderThickness" Value="1"/>
+                        </Style>
+                        <Style TargetType="TextBlock" BasedOn="{StaticResource MahApps.Styles.TextBlock}">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="HorizontalAlignment" Value="Left"/>
+                            <Setter Property="FontSize" Value="12"/>
                         </Style>
                     </Grid.Resources>
                     <Grid.ColumnDefinitions>
@@ -100,7 +114,7 @@
                     <Border Grid.Row="4" Grid.Column="1" Background="Yellow"/>
                 </Grid>
             </StackPanel>
-        </Grid>
+        </Border>
 
         <Grid Grid.Column="1">
             <ScrollViewer>

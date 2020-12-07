@@ -103,6 +103,7 @@ namespace Client
             {
                 IsConnected = Client.IsConnected;
                 Client.MessageRecieved += ClientOnMessageRecieved;
+                Client.Disconnected += ClientOnDisconnected;
             }
             else
             {
@@ -135,6 +136,7 @@ namespace Client
 
         private async void Disconnect(object _)
         {
+            Client.Disconnected -= ClientOnDisconnected;
             Client.MessageRecieved -= ClientOnMessageRecieved;
             IsConnected = false;
             await Client.Disconnect();
@@ -216,6 +218,12 @@ namespace Client
                 file.State = responce.State == EResponceState.Bad ? EFileState.RecievedBad : EFileState.RecievedGood;
                 file.IsPolinom = responce.IsPolinom;
             }
+        }
+
+        private void ClientOnDisconnected(Guid guid)
+        {
+            IsConnected = false;
+            Client.Disconnected -= ClientOnDisconnected;
         }
     }
 }
