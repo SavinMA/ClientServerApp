@@ -70,7 +70,11 @@
                             Command="{Binding SendCommand}"/>
 
                     <TextBlock Text="Время отправки между файлами (мс)"/>
-                    <TextBox Text="{Binding DelayFromSends, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <mah:NumericUpDown
+                        Value="{Binding DelayFromSends, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Minimum="0"
+                        Maximum="100000"
+                        Interval="10"/>
                 </StackPanel>
 
                 <TextBlock Text="Справочник" FontSize="16" FontWeight="Normal" HorizontalAlignment="Center" Margin="0 5"/>
